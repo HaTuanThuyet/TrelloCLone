@@ -99,7 +99,7 @@ export default function Column({ column, onCardDrop, onUpdateColumns, }) {
                         <Dropdown.Toggle size='sm' id="dropdown-basic" className="dropdownbtn" />
 
                         <Dropdown.Menu >
-                            <Dropdown.Item >Add Card</Dropdown.Item>
+                            <Dropdown.Item onClick={toggleOpenNewCard}>Add Card</Dropdown.Item>
                             <Dropdown.Item onClick={toggleConfilmModel}>Remove Column...</Dropdown.Item>
                             <Dropdown.Item >Move All cards in thí column (beta) ...</Dropdown.Item>
                             <Dropdown.Item >Archive All cards in thí column (beta)...</Dropdown.Item>
