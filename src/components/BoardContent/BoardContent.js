@@ -4,9 +4,9 @@ import { applyDrag } from 'utilities/dragDrop'
 import { Container, Draggable } from "react-smooth-dnd"
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Container as BoostrapContainer, Row, Col, Button } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form';
+import Form from 'react-bootstrap/Form'
 import './BoardContent.scss'
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash'
 import { initialData } from 'components/actions/initialData'
 
 export default function BoardContent() {
@@ -80,6 +80,25 @@ export default function BoardContent() {
     setnewColumnTitle('')
     toggleOpenNewColumn()
   }
+  const onUpdateColumns = (newColumnUpdate) => {
+    console.log(newColumnUpdate)
+    const columnIdToUpdate = newColumnUpdate.id
+    let newColumns = [...columns]
+    const columnIndexToUpdate = newColumns.findIndex(i => i.id === columnIdToUpdate)
+    console.log(columnIndexToUpdate)
+    if (newColumnUpdate._destroy) {
+      // remove
+      newColumns.splice(columnIndexToUpdate, 1)
+    } else {
+      newColumns.splice(columnIndexToUpdate, 1, newColumnUpdate)
+    }
+    let newBoard = { ...board }
+    newBoard.columnOrder = newColumns.map(c => c.id)
+    newBoard.columns = newColumns
+    console.log(newBoard)
+    setColumns(newColumns)
+    setBoard(newBoard)
+  }
   return (
     <div className="board-content">
       <Container
@@ -95,7 +114,7 @@ export default function BoardContent() {
       >
         {columns.map((column, index) => (
           <Draggable key={index}>
-            <Column column={column} onCardDrop={onCardDrop} />
+            <Column column={column} onCardDrop={onCardDrop} onUpdateColumns={onUpdateColumns} />
           </Draggable>
         )
         )}
@@ -103,8 +122,8 @@ export default function BoardContent() {
       <BoostrapContainer className='trello-container'>
         {!openNewColoumn &&
           <Row>
-            <Col className='add-new-column'>
-              <i className="fa fa-plus icon" onClick={toggleOpenNewColumn} /> Add another Card
+            <Col className='add-new-column' onClick={toggleOpenNewColumn}>
+              <i className="fa fa-plus icon" /> Add another Card
             </Col>
           </Row>
         }
@@ -117,7 +136,7 @@ export default function BoardContent() {
                 ref={newColumnRef}
                 value={newColumnTitle}
                 onChange={onNewColumnTitleChange}
-                onKeyDown={e => (e.key === 'Enter') &&  addNewColumn()}
+                onKeyDown={e => (e.key === 'Enter') && addNewColumn()}
                 placeholder="Enter Column title..."
                 className='input-enter-new-column' />
               <Button variant="success" size='sm' onClick={addNewColumn}>Add Column</Button>
