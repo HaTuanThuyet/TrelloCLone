@@ -13,6 +13,7 @@ export default function BoardContent() {
   const [board, setBoard] = useState({})
   const [columns, setColumns] = useState([])
   const [openNewColoumn, setopenNewColoumn] = useState(false)
+  const toggleOpenNewColumn = () => setopenNewColoumn(!openNewColoumn)
   const newColumnRef = useRef(null)
   const [newColumnTitle, setnewColumnTitle] = useState('')
   const onNewColumnTitleChange = useCallback((e) => setnewColumnTitle(e.target.value))
@@ -57,7 +58,7 @@ export default function BoardContent() {
       setColumns(newColumns)
     }
   }
-  const toggleOpenNewColumn = () => setopenNewColoumn(!openNewColoumn)
+
   const addNewColumn = () => {
     if (!newColumnTitle) {
       newColumnRef.current.focus()
@@ -99,6 +100,7 @@ export default function BoardContent() {
     setColumns(newColumns)
     setBoard(newBoard)
   }
+  
   return (
     <div className="board-content">
       <Container
@@ -114,7 +116,12 @@ export default function BoardContent() {
       >
         {columns.map((column, index) => (
           <Draggable key={index}>
-            <Column column={column} onCardDrop={onCardDrop} onUpdateColumns={onUpdateColumns} />
+            <Column 
+            column={column} 
+            onCardDrop={onCardDrop} 
+            onUpdateColumns={onUpdateColumns}
+            
+             />
           </Draggable>
         )
         )}
@@ -140,7 +147,7 @@ export default function BoardContent() {
                 placeholder="Enter Column title..."
                 className='input-enter-new-column' />
               <Button variant="success" size='sm' onClick={addNewColumn}>Add Column</Button>
-              <span className='cancel-new-column' onClick={toggleOpenNewColumn}><i className='fa fa-trash icon' /></span>
+              <span className='cancel-icon' onClick={toggleOpenNewColumn}><i className='fa fa-trash icon' /></span>
             </Col>
           </Row>
         }

@@ -48,23 +48,21 @@ $column-height: calc(#{$board-content-height}- #{$gap * 2});
                     background-color: darken($column-bg-color, $amount: 10);
                     border-color: darken($column-bg-color, $amount: 10);
                 }
-                .dropdown-menu{
+                .dropdown-menu {
                     padding: 0;
                     min-width: 200px;
-                    a.dropdown-item{
+                    a.dropdown-item {
                         padding: 0.1rem 1rem;
                         font-size: 14px;
-                        &:not(:last-child){
+                        &:not(:last-child) {
                             border-bottom: 1px solid darken($column-bg-color, $amount: 10);
-
                         }
                     }
-
                 }
             }
         }
     }
-           
+
     footer {
         padding-left: 10px;
         height: $column-footer-height;
@@ -111,5 +109,13 @@ $column-height: calc(#{$board-content-height}- #{$gap * 2});
             background-color: darken($column-bg-color, 15);
             border-right: 5px solid $column-bg-color;
         }
+        .add-new-card-area {
+            .textarea-enter-new-card {
+                min-height: 54px;
+                max-height: 162px;
+              
+            }
+        }
+
     }
 }
