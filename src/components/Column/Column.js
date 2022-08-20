@@ -1,32 +1,45 @@
 import Card from 'components/Card/Card'
 import { Container, Draggable } from "react-smooth-dnd"
 import Dropdown from 'react-bootstrap/Dropdown'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './Column.scss';
 import { mapOrder } from 'utilities/sorts'
 import ConfilmMode from 'components/Common/ConfilmModel'
 import { MODAL_ACTION_CONFLIM } from 'utilities/constants'
 import Form from 'react-bootstrap/Form'
+import { Container as BoostrapContainer, Row, Col, Button } from 'react-bootstrap'
 import { saveContentAffterEnter, selectAllInlineText } from 'utilities/contentEditable';
-
-export default function Column({ column, onCardDrop, onUpdateColumns }) {
+import { cloneDeep } from 'lodash'
+export default function Column({ column, onCardDrop, onUpdateColumns, }) {
     const cards = mapOrder(column.cards, column.cardOrder, 'id')
-
+    const mewCardTextRef = useRef(null)
     const [showConfilmModle, setshowConfilmModle] = useState(false)
     const [columnTitle, setcolumnTitle] = useState('')
+
+    const [newCardTitle, setnewCardTitle] = useState('')
+    const onNewCardTitleChange = useCallback((e) => setnewCardTitle(e.target.value))
     useEffect(() => {
         setcolumnTitle(column.title)
     }, [column.title])
+
     const handleColumnChange = useCallback((e) => setcolumnTitle(e.target.value), [])
+    const [openNewCard, setopenNewCard] = useState(false)
+    const toggleOpenNewCard = () => setopenNewCard(!openNewCard)
     const handleColumnBluer = () => {
         // console.log(columnTitle)
         const newColumn = {
             ...column,
-           title:columnTitle
+            title: columnTitle
         }
         onUpdateColumns(newColumn)
     }
+    useEffect(() => {
+        if (mewCardTextRef && mewCardTextRef.current) {
+            mewCardTextRef.current.focus()
+            mewCardTextRef.current.select()
 
+        }
+    }, [openNewCard])
 
     const onConFIlmModalAction = (type) => {
         if (type === MODAL_ACTION_CONFLIM) {
@@ -41,6 +54,26 @@ export default function Column({ column, onCardDrop, onUpdateColumns }) {
     }
     const toggleConfilmModel = () => {
         setshowConfilmModle(!showConfilmModle)
+    }
+    const addNewCard = () => {
+        if (!newCardTitle) {
+            mewCardTextRef.current.focus()
+            return
+        }
+        const newCardToAdd = {
+            id: Math.random().toString(36).substring(2, 5),
+            boardId: column.boardId,
+            columnId: column.id,
+            title: newCardTitle.trim(),
+            cover: null
+        }
+       let newColumn =cloneDeep(column)
+       newColumn.cards.push(newCardToAdd)
+       newColumn.cardOrder.push(newCardToAdd.id)
+       onUpdateColumns(newColumn)
+       setnewCardTitle('')
+       toggleOpenNewCard()
+
     }
     return (
         <div className="column">
@@ -99,11 +132,32 @@ export default function Column({ column, onCardDrop, onUpdateColumns }) {
                         </Draggable>
                     ))}
                 </Container>
+                {openNewCard &&
+                    <div className="add-new-card-area">
+                        <Form.Control
+                            size="sm"
+                            as="textarea"
+                            rows='3'
+                            ref={mewCardTextRef}
+                            value={newCardTitle}
+                            onChange={onNewCardTitleChange}
+                            onKeyDown={e => (e.key === 'Enter') && addNewCard()}
+                            placeholder="Enter title for this card..."
+                            className='textarea-enter-new-card' />
+
+                    </div>
+                }
             </div>
             <footer>
-                <div className="footer-actions">
+                {openNewCard &&
+                    <div className="add-new-card-actions">
+                        <Button variant="success" size='sm' onClick={addNewCard} >Add Card</Button>
+                        <span className='cancel-icon' onClick={toggleOpenNewCard}><i className='fa fa-trash icon' /></span>
+                    </div>
+                }
+                {!openNewCard && <div className="footer-actions" onClick={toggleOpenNewCard}>
                     <i className="fa fa-plus icon" /> Add another Card
-                </div>
+                </div>}
             </footer>
             <ConfilmMode
                 show={showConfilmModle}

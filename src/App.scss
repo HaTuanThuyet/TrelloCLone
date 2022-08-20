@@ -34,21 +34,33 @@ body {
     [type="tel"].form-control:focus,
     [contenteditable].form-control:focus {
         box-shadow: none;
+        border: 1px solid $input-border-color;
     }
-    .btn:focus, .btn:active{
-        outline: none  !important;
+    .btn:focus,
+    .btn:active {
+        outline: none !important;
         box-shadow: none !important;
     }
-    .thuyet-content-editable{
+    .thuyet-content-editable {
         background-color: inherit;
         border: none;
         font-size: inherit;
         font-weight: 600;
         cursor: pointer;
-        &:focus{
-        background-color: white;
-        border: 1px solid $input-border-color;
+        &:focus {
+            background-color: white;
+       
+        }
     }
-}
-
+    span.cancel-icon {
+        margin-left: $gap;
+        cursor: pointer;
+        i {
+            font-size: 18px;
+            color: $alest-danger;
+            &:hover {
+                color: darken($color: $alest-danger, $amount: 10);
+            }
+        }
+    }
 }
